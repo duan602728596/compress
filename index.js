@@ -17,7 +17,7 @@ const brotli = require('iltorb')
  */
 
 const encodingMethods = {
-  br: brotli.compress,
+  br: brotli.compressStream,
   gzip: zlib.createGzip,
   deflate: zlib.createDeflate
 }
@@ -65,11 +65,8 @@ module.exports = (options = {}, brOptions = {}) => {
     ctx.set('Content-Encoding', encoding)
     ctx.res.removeHeader('Content-Length')
 
-    const result = encoding === 'br'
-      ? await encodingMethods[encoding](brOptions) // brotli
-      : encodingMethods[encoding](options) // gzip, deflate
-
-    const stream = ctx.body = result
+    const compress = encodingMethods[encoding](encoding === 'br' ? brOptions : options)
+    const stream = ctx.body = compress
 
     if (body instanceof Stream) {
       body.pipe(stream)
