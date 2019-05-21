@@ -53,7 +53,7 @@ module.exports = (options = {}, brOptions = {}) => {
 
     // identity
     const encoding = ctx.acceptsEncodings('br', 'gzip', 'deflate', 'identity')
-    if (!encoding) ctx.throw(406, 'supported encodings: gzip, deflate, identity')
+    if (!encoding) ctx.throw(406, 'supported encodings: br, gzip, deflate, identity')
     if (encoding === 'identity') return
 
     // json
