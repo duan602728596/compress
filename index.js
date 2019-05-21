@@ -31,8 +31,8 @@ const encodingMethods = {
  * @api public
  */
 
-module.exports = (options = {}, brOptions = {}) => {
-  let { filter = compressible, threshold = 1024 } = options
+module.exports = (options = {}, brOptions = { quality: 6 }) => {
+  let { filter = compressible, threshold = 1024, useBrCompress = true } = options
   if (typeof threshold === 'string') threshold = bytes(threshold)
 
   return async (ctx, next) => {
@@ -52,7 +52,10 @@ module.exports = (options = {}, brOptions = {}) => {
     if (!(ctx.compress === true || filter(ctx.response.type))) return
 
     // identity
-    const encoding = ctx.acceptsEncodings('br', 'gzip', 'deflate', 'identity')
+    const AcceptEncoding = ctx.request.get('Accept-Encoding')
+    const useBr = useBrCompress && AcceptEncoding.includes('br')
+    const encoding = useBr ? 'br' : ctx.acceptsEncodings('br', 'gzip', 'deflate', 'identity')
+
     if (!encoding) ctx.throw(406, 'supported encodings: br, gzip, deflate, identity')
     if (encoding === 'identity') return
 
