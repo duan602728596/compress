@@ -10,12 +10,14 @@ const status = require('statuses')
 const Stream = require('stream')
 const bytes = require('bytes')
 const zlib = require('zlib')
+const brotli = require('iltorb')
 
 /**
  * Encoding methods supported.
  */
 
 const encodingMethods = {
+  br: brotli.compress,
   gzip: zlib.createGzip,
   deflate: zlib.createDeflate
 }
@@ -24,11 +26,12 @@ const encodingMethods = {
  * Compress middleware.
  *
  * @param {Object} [options]
+ * @param {Object} [brOptions]
  * @return {Function}
  * @api public
  */
 
-module.exports = (options = {}) => {
+module.exports = (options = {}, brOptions = {}) => {
   let { filter = compressible, threshold = 1024 } = options
   if (typeof threshold === 'string') threshold = bytes(threshold)
 
@@ -49,7 +52,7 @@ module.exports = (options = {}) => {
     if (!(ctx.compress === true || filter(ctx.response.type))) return
 
     // identity
-    const encoding = ctx.acceptsEncodings('gzip', 'deflate', 'identity')
+    const encoding = ctx.acceptsEncodings('br', 'gzip', 'deflate', 'identity')
     if (!encoding) ctx.throw(406, 'supported encodings: gzip, deflate, identity')
     if (encoding === 'identity') return
 
@@ -62,7 +65,11 @@ module.exports = (options = {}) => {
     ctx.set('Content-Encoding', encoding)
     ctx.res.removeHeader('Content-Length')
 
-    const stream = ctx.body = encodingMethods[encoding](options)
+    const result = encoding === 'br'
+      ? await encodingMethods[encoding](brOptions) // brotli
+      : encodingMethods[encoding](options) // gzip, deflate
+
+    const stream = ctx.body = result
 
     if (body instanceof Stream) {
       body.pipe(stream)
