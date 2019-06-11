@@ -6,6 +6,8 @@
 
 Compress middleware for Koa
 
+> forked from [koa-compress](https://github.com/koajs/compress), support brotli compression.
+
 ## Example
 
 ```js
@@ -19,7 +21,7 @@ app.use(compress({
   },
   threshold: 2048,
   flush: require('zlib').Z_SYNC_FLUSH
-}))
+}, { quality: 6 } /* brOptions */))
 ```
 
 ## Options

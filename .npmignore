@@ -1,0 +1,20 @@
+# node
+node_modules
+npm-debug.log
+package-lock.json
+
+# yarn
+yarn.lock
+yarn-error.log
+
+# ignore
+.npmignore
+.eslintrc
+.gitignore
+.npmrc
+.travis.yml
+
+package
+__tests__
+
+.DS_Store

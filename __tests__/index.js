@@ -33,10 +33,10 @@ describe('Compress', () => {
       .end((err, res) => {
         if (err) { return done(err) }
 
-        assert.equal(res.headers['transfer-encoding'], 'chunked')
-        assert.equal(res.headers.vary, 'Accept-Encoding')
+        assert.strictEqual(res.headers['transfer-encoding'], 'chunked')
+        assert.strictEqual(res.headers.vary, 'Accept-Encoding')
         assert(!res.headers['content-length'])
-        assert.equal(res.text, string)
+        assert.strictEqual(res.text, string)
 
         done()
       })
@@ -56,11 +56,11 @@ describe('Compress', () => {
       .end((err, res) => {
         if (err) { return done(err) }
 
-        assert.equal(res.headers['content-length'], '2048')
-        assert.equal(res.headers.vary, 'Accept-Encoding')
+        assert.strictEqual(res.headers['content-length'], '2048')
+        assert.strictEqual(res.headers.vary, 'Accept-Encoding')
         assert(!res.headers['content-encoding'])
         assert(!res.headers['transfer-encoding'])
-        assert.equal(res.text, string)
+        assert.strictEqual(res.text, string)
 
         done()
       })
@@ -81,10 +81,10 @@ describe('Compress', () => {
       .end((err, res) => {
         if (err) { return done(err) }
 
-        assert.equal(res.headers['transfer-encoding'], 'chunked')
-        assert.equal(res.headers.vary, 'Accept-Encoding')
+        assert.strictEqual(res.headers['transfer-encoding'], 'chunked')
+        assert.strictEqual(res.headers.vary, 'Accept-Encoding')
         assert(!res.headers['content-length'])
-        assert.equal(res.text, JSON.stringify(jsonBody))
+        assert.strictEqual(res.text, JSON.stringify(jsonBody))
 
         done()
       })
@@ -105,10 +105,10 @@ describe('Compress', () => {
       .end((err, res) => {
         if (err) { return done(err) }
 
-        assert.equal(res.headers.vary, 'Accept-Encoding')
+        assert.strictEqual(res.headers.vary, 'Accept-Encoding')
         assert(!res.headers['content-encoding'])
         assert(!res.headers['transfer-encoding'])
-        assert.equal(res.text, JSON.stringify(jsonBody))
+        assert.strictEqual(res.text, JSON.stringify(jsonBody))
 
         done()
       })
@@ -126,8 +126,8 @@ describe('Compress', () => {
       .end((err, res) => {
         if (err) { return done(err) }
 
-        assert.equal(res.headers['transfer-encoding'], 'chunked')
-        assert.equal(res.headers.vary, 'Accept-Encoding')
+        assert.strictEqual(res.headers['transfer-encoding'], 'chunked')
+        assert.strictEqual(res.headers.vary, 'Accept-Encoding')
         assert(!res.headers['content-length'])
 
         done()
@@ -151,8 +151,8 @@ describe('Compress', () => {
         if (err) { return done(err) }
 
         // res.should.have.header('Content-Encoding', 'gzip')
-        assert.equal(res.headers['transfer-encoding'], 'chunked')
-        assert.equal(res.headers.vary, 'Accept-Encoding')
+        assert.strictEqual(res.headers['transfer-encoding'], 'chunked')
+        assert.strictEqual(res.headers.vary, 'Accept-Encoding')
         assert(!res.headers['content-length'])
 
         done()
@@ -171,8 +171,8 @@ describe('Compress', () => {
       .end((err, res) => {
         if (err) { return done(err) }
 
-        assert.equal(res.headers['transfer-encoding'], 'chunked')
-        assert.equal(res.headers.vary, 'Accept-Encoding')
+        assert.strictEqual(res.headers['transfer-encoding'], 'chunked')
+        assert.strictEqual(res.headers.vary, 'Accept-Encoding')
         assert(!res.headers['content-length'])
 
         done()
@@ -194,8 +194,8 @@ describe('Compress', () => {
       .end((err, res) => {
         if (err) { return done(err) }
 
-        assert.equal(res.headers['content-length'], '1024')
-        assert.equal(res.headers.vary, 'Accept-Encoding')
+        assert.strictEqual(res.headers['content-length'], '1024')
+        assert.strictEqual(res.headers.vary, 'Accept-Encoding')
         assert(!res.headers['content-encoding'])
         assert(!res.headers['transfer-encoding'])
 
@@ -289,10 +289,10 @@ describe('Compress', () => {
         if (err) { return done(err) }
 
         // res.should.have.header('Content-Encoding', 'gzip')
-        assert.equal(res.headers['transfer-encoding'], 'chunked')
-        assert.equal(res.headers.vary, 'Accept-Encoding')
+        assert.strictEqual(res.headers['transfer-encoding'], 'chunked')
+        assert.strictEqual(res.headers.vary, 'Accept-Encoding')
         assert(!res.headers['content-length'])
-        assert.equal(res.text, string)
+        assert.strictEqual(res.text, string)
 
         done()
       })
