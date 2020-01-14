@@ -10,14 +10,32 @@ const status = require('statuses')
 const Stream = require('stream')
 const bytes = require('bytes')
 const zlib = require('zlib')
-const brotli = require('iltorb')
+
+function omit (obj, keys = []) {
+  const newObj = {}
+
+  for (const key in obj) {
+    if (!keys.includes(key)) {
+      newObj[key] = obj[key]
+    }
+  }
+
+  return newObj
+}
+
+function brCompressMethod () {
+  return require('iltorb').compressStream
+}
 
 /**
  * Encoding methods supported.
  */
+const isSupportedBr = 'createBrotliCompress' in zlib
+
+module.exports.isSupportedBr = isSupportedBr
 
 const encodingMethods = {
-  br: brotli.compressStream,
+  br: zlib.createBrotliCompress,
   gzip: zlib.createGzip,
   deflate: zlib.createDeflate
 }
@@ -31,9 +49,10 @@ const encodingMethods = {
  * @api public
  */
 
-module.exports = (options = {}, brOptions = { quality: 6 }) => {
+module.exports = (options = {}, brOptions = {}) => {
   let { filter = compressible, threshold = 1024, useBrCompress = true } = options
   if (typeof threshold === 'string') threshold = bytes(threshold)
+  if (brOptions.iltorb) encodingMethods.br = brCompressMethod()
 
   return async (ctx, next) => {
     ctx.vary('Accept-Encoding')
@@ -68,7 +87,7 @@ module.exports = (options = {}, brOptions = { quality: 6 }) => {
     ctx.set('Content-Encoding', encoding)
     ctx.res.removeHeader('Content-Length')
 
-    const compress = encodingMethods[encoding](encoding === 'br' ? brOptions : options)
+    const compress = encodingMethods[encoding](encoding === 'br' ? brOptions : omit(options, ['useBrCompress']))
     const stream = ctx.body = compress
 
     if (body instanceof Stream) {

@@ -13,7 +13,6 @@
   "dependencies": {
     "bytes": "^3.1.0",
     "compressible": "^2.0.17",
-    "iltorb": "^2.4.3",
     "koa-is-json": "^1.0.0",
     "statuses": "^1.5.0"
   },
@@ -28,6 +27,9 @@
     "koa": "^2.7.0",
     "supertest": "^4.0.2"
   },
+  "peerDependencies": {
+    "iltorb": "^2.4.4"
+  },
   "scripts": {
     "eslint": "eslint --ignore-path .gitignore .",
     "test": "jest --forceExit"
@@ -41,6 +43,6 @@
     "testEnvironment": "node"
   },
   "engines": {
-    "node": ">= 8.0.0"
+    "node": ">= 11.7.0"
   }
 }
