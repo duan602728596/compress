@@ -54,6 +54,9 @@ module.exports = (options = {}, brOptions = {}) => {
   if (typeof threshold === 'string') threshold = bytes(threshold)
   if (brOptions.iltorb) encodingMethods.br = brCompressMethod()
 
+  const gzipMethodOptions = omit(options, ['useBrCompress'])
+  const brMethodOptions = omit(brOptions, ['iltorb'])
+
   return async (ctx, next) => {
     ctx.vary('Accept-Encoding')
 
@@ -87,7 +90,7 @@ module.exports = (options = {}, brOptions = {}) => {
     ctx.set('Content-Encoding', encoding)
     ctx.res.removeHeader('Content-Length')
 
-    const compress = encodingMethods[encoding](encoding === 'br' ? brOptions : omit(options, ['useBrCompress']))
+    const compress = encodingMethods[encoding](encoding === 'br' ? brMethodOptions : gzipMethodOptions)
     const stream = ctx.body = compress
 
     if (body instanceof Stream) {
