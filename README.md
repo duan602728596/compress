@@ -15,18 +15,32 @@ var compress = require('koa-compress')
 var Koa = require('koa')
 
 var app = new Koa()
-app.use(compress({
-  filter: function (content_type) {
-  	return /text/i.test(content_type)
+app.use(compress(
+  /* compress Options(gzip) */
+  {
+    filter: function (content_type) {
+  	  return /text/i.test(content_type)
+    },
+    threshold: 2048,
+    flush: require('zlib').Z_SYNC_FLUSH
   },
-  threshold: 2048,
-  flush: require('zlib').Z_SYNC_FLUSH
-}, { quality: 6 } /* brOptions */))
+  /* brOptions */
+  { iltorb: true }
+))
 ```
+
+## brOptions
+
+iltorb: Replace `zlib` with `iltorb` module for br compression (The iltorb module is faster than zlib compression).
+You must download the `iltorb` module yourself.   
+
+If you use the `zlib` module: https://nodejs.org/api/zlib.html#zlib_class_brotlioptions   
+
+If you use the `iltorb` module: https://github.com/nstepien/iltorb
 
 ## Options
 
-The options are passed to `zlib`: http://nodejs.org/api/zlib.html#zlib_options
+The options are passed to `zlib`: https://nodejs.org/api/zlib.html#zlib_class_optionsz
 
 ### filter
 
